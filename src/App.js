@@ -334,9 +334,6 @@ const PathfindingVisualizer = () => {
       case 'astar':
         result = astar();
         break;
-      case 'dijkstra':
-        result = dijkstra();
-        break;
       case 'bfs':
         result = bfs();
         break;
@@ -686,13 +683,11 @@ const PathfindingVisualizer = () => {
   const getAlgorithmExplanation = (algo) => {
     switch (algo) {
       case 'astar':
-        return "A* Search uses a heuristic to estimate the distance to the goal, making it efficient for finding the shortest path.";
-      case 'dijkstra':
-        return "Dijkstra's Algorithm explores all possible paths, guaranteeing the shortest path but potentially slower than A*.";
+        return "A* is an informed search algorithm that combines features of Dijkstra's algorithm and greedy best-first search. In searching this maze it uses a heuristic function (Manhattan distance) to estimate the cost from any cell to the goal. It maintains two values for each cell: g(n) (the cost to reach the cell) and h(n) (the estimated cost from the cell to the goal). It selects the next cell to explore based on f(n) = g(n) + h(n), balancing the known path cost and the estimated remaining cost. A* is very fast and guarantees the shortest path if the heuristic is admissible.";
       case 'bfs':
-        return "Breadth-First Search explores nodes level by level, finding the shortest path in unweighted graphs.";
+        return "BFS explores all neighbor cells at the present depth before moving to cells at the next depth level. It essentially is like spilling water from one source and seeing it spread. In maze pathfinding: It uses a queue to keep track of cells to visit. It explores cells in order of their distance from the start. It guarantees the shortest path in unweighted mazes like this one. It is the best option when there is no nowledge of the finish location";
       case 'dfs':
-        return "Depth-First Search explores as far as possible along each branch before backtracking, not guaranteed to find the shortest path.";
+        return "DFS explores as far as possible along each branch before backtracking. In maze pathfinding: It uses a stack to keep track of cells to visit. It explores one possible path to its full extent before backtracking. It does not guarantee the shortest path making it a poor choice.";
       default:
         return "";
     }
@@ -701,11 +696,11 @@ const PathfindingVisualizer = () => {
   const getMazeAlgorithmExplanation = (algo) => {
     switch (algo) {
       case 'recursiveBacktracker':
-        return "Recursive Backtracker creates mazes with long, winding passages and few dead ends.";
+        return "The Recursive Backtracker algorithm creates mazes with long, winding passages: It starts at a random cell and marks it as visited. It chooses a random unvisited neighbor, moves to it, and removes the wall between them. It continues this process until it reaches a dead end (a cell with no unvisited neighbors). When it reaches a dead end, it backtracks to the last cell with unvisited neighbors and continues from there. This process continues until all cells have been visited. Recursive Backtracker tends to create mazes with long, winding passages and relatively few dead ends.";
       case 'prim':
-        return "Prim's Algorithm generates mazes with a more 'organic' appearance and shorter dead ends.";
+        return "Prim's algorithm generates a maze by creating a minimum spanning tree: It starts with a grid of walls. It chooses a starting cell and marks it as part of the maze. It adds the walls of the current cell to a list of candidates. It repeatedly chooses a random wall from the candidates, and if the cell on the other side isn't in the maze yet, it removes the wall and adds the new cell to the maze. This process continues until all cells are part of the maze. Prim's algorithm tends to create mazes with a more "organic" appearance and shorter dead ends.";
       case 'kruskal':
-        return "Kruskal's Algorithm produces mazes with many short dead ends and a more uniform structure.";
+        return "Kruskal's algorithm generates a maze by creating a minimum spanning tree: It starts with a grid where each cell is in its own set. It creates a list of all walls. It repeatedly chooses a random wall. If the cells on either side of the wall are in different sets, it removes the wall and merges the sets. This continues until all cells are in the same set. Kruskal's algorithm tends to produce mazes with many short dead ends and a more uniform structure.";
       default:
         return "";
     }
@@ -723,7 +718,6 @@ const PathfindingVisualizer = () => {
             onChange={handleAlgorithmChange}
             options={[
               { value: 'astar', label: 'A* Search' },
-              { value: 'dijkstra', label: 'Dijkstra\'s Algorithm' },
               { value: 'bfs', label: 'Breadth-First Search' },
               { value: 'dfs', label: 'Depth-First Search' },
             ]}
